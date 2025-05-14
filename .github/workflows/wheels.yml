@@ -180,7 +180,8 @@ jobs:
         #uses: pypa/cibuildwheel@ee63bf16da6cddfb925f542f2c7b59ad50e93969  # v2.22.0
         if: ${{ matrix.buildplat[1] == 'manylinux_ppc64le' }}
         env:
-          
+          CIBW_PRERELEASE_PYTHONS: "1"
+          CIBW_FREE_THREADING_SUPPORT: "1"
           CIBW_ARCHS: "ppc64le"
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
           
