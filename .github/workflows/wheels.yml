@@ -88,7 +88,7 @@ jobs:
           #- [windows-2019, win_amd64, ""]
           #- [windows-2019, win32, ""]
           #- [windows-11-arm, win_arm64, ""]
-        python: ["cp311", "cp312", "cp313", "cp313t", "pp311"]
+        python: ["cp311"]
         #exclude:
           # Don't build PyPy 32-bit windows
           #- buildplat: [windows-2019, win32, ""]
@@ -195,7 +195,7 @@ jobs:
           python3 -m venv venv
           source venv/bin/activate
           python3 -m pip install cibuildwheel==2.22.0
-          cibuildwheel
+          cibuildwheel --enable prerelease-pythons --enable free-threaded-support
           
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
