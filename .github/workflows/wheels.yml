@@ -178,7 +178,7 @@ jobs:
 
       - name: Check Docker logs for more details
         run: |
-          journalctl -xeu docker.service
+          sudo journalctl -xeu docker.service
         shell: bash
 
       - name: Reinstall Docker if needed
