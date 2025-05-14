@@ -184,7 +184,7 @@ jobs:
           CIBW_ARCHS: "ppc64le"
           CIBW_SKIP: ""
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
-          
+          CIBW_CONTAINER_ENGINE: docker
           CIBW_CONTAINER_PRIVILEGED: true
         run: |
           sudo apt-get update
