@@ -171,7 +171,7 @@ jobs:
           fi
 
       - name: Build wheels
-        #if : ${{ matrix.buildplat[1] != 'manylinux_ppc64le' }}
+        if : ${{ matrix.buildplat[1] != 'manylinux_ppc64le' }}
         uses: pypa/cibuildwheel@faf86a6ed7efa889faf6996aa23820831055001a  # v2.23.3
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
@@ -194,7 +194,7 @@ jobs:
           export PATH=$HOME/.local/bin:$PATH
           python3 -m venv venv
           source venv/bin/activate
-          python3 -m pip install cibuildwheel
+          python3 -m pip install cibuildwheel==2.22.0
           cibuildwheel
           
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
