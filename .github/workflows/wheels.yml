@@ -195,10 +195,9 @@ jobs:
           python3 -m venv venv
           source venv/bin/activate
           python3 -m pip install cibuildwheel==2.23.3
-          which cibuildwheel
-          python3 -m pip show cibuildwheel
-          cibuildwheel --help
-          cibuildwheel --enable prerelease-pythons --enable free-threaded-support
+          
+          
+          python3 -m cibuildwheel
           
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
