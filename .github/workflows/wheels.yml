@@ -178,11 +178,9 @@ jobs:
       - name: Ensure Docker is running
         run: |
   
-          # Check Docker status
+          sudo systemctl status docker || echo "Docker is not running"
+          sudo systemctl restart docker || echo "Failed to restart Docker"
           sudo systemctl status docker
-
-          # Verify Docker is running
-          docker --version
 
       - name: Build wheels for ppc64le
         #uses: pypa/cibuildwheel@ee63bf16da6cddfb925f542f2c7b59ad50e93969  # v2.22.0
