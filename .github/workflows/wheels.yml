@@ -175,30 +175,14 @@ jobs:
         uses: pypa/cibuildwheel@faf86a6ed7efa889faf6996aa23820831055001a  # v2.23.3
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
-
-      - name: Install Docker on ppc64le
-        if: ${{ matrix.buildplat[1] == 'manylinux_ppc64le' }}
+      - name: Ensure Docker is running
         run: |
-          sudo apt-get update
-          sudo apt-get install -y \
-            ca-certificates \
-            curl \
-            gnupg \
-            lsb-release
-      
-          sudo mkdir -p /etc/apt/keyrings
-          curl -fsSL https://download.docker.com/linux/debian/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
-      
-          echo \
-            "deb [arch=ppc64el signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/$(. /etc/os-release; echo "$ID") \
-            $(lsb_release -cs) stable" | \
-            sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-      
-          sudo apt-get update
-          sudo apt-get install -y docker-ce docker-ce-cli containerd.io
-      
-          sudo systemctl start docker
-          sudo systemctl enable docker
+  
+          # Check Docker status
+          sudo systemctl status docker
+
+          # Verify Docker is running
+          docker --version
 
       - name: Build wheels for ppc64le
         #uses: pypa/cibuildwheel@ee63bf16da6cddfb925f542f2c7b59ad50e93969  # v2.22.0
