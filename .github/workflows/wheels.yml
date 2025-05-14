@@ -44,7 +44,7 @@ jobs:
     runs-on: ubuntu-latest
     # Only workflow_dispatch is enabled on forks.
     # To enable this job and subsequent jobs on a fork for other events, comment out:
-    if: github.repository == 'numpy/numpy' || github.event_name == 'workflow_dispatch'
+    
     outputs:
       message: ${{ steps.commit_message.outputs.message }}
     steps:
@@ -67,11 +67,6 @@ jobs:
   build_wheels:
     name: Build wheel ${{ matrix.python }}-${{ matrix.buildplat[1] }}-${{ matrix.buildplat[2] }}
     needs: get_commit_message
-    if: >-
-      contains(needs.get_commit_message.outputs.message, '[wheel build]') ||
-      github.event_name == 'schedule' ||
-      github.event_name == 'workflow_dispatch' ||
-      (github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v') && ( ! endsWith(github.ref, 'dev0')))
     runs-on: ${{ matrix.buildplat[0] }}
     strategy:
       # Ensure that a wheel builder finishes even if another fails
@@ -80,33 +75,34 @@ jobs:
         # Github Actions doesn't support pairing matrix values together, let's improvise
         # https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
-          - [ubuntu-22.04, manylinux_x86_64, ""]
-          - [ubuntu-22.04, musllinux_x86_64, ""]
-          - [ubuntu-22.04-arm, manylinux_aarch64, ""]
-          - [ubuntu-22.04-arm, musllinux_aarch64, ""]
-          - [macos-13, macosx_x86_64, openblas]
+          - [ubuntu-24.04-ppc64le, manylinux_ppc64le, ""]    
+          #- [ubuntu-22.04, manylinux_x86_64, ""]
+          #- [ubuntu-22.04, musllinux_x86_64, ""]
+          #- [ubuntu-22.04-arm, manylinux_aarch64, ""]
+          #- [ubuntu-22.04-arm, musllinux_aarch64, ""]
+          #- [macos-13, macosx_x86_64, openblas]
 
           # targeting macos >= 14. Could probably build on macos-14, but it would be a cross-compile
-          - [macos-13, macosx_x86_64, accelerate]
-          - [macos-14, macosx_arm64, accelerate]  # always use accelerate
-          - [windows-2019, win_amd64, ""]
-          - [windows-2019, win32, ""]
-          - [windows-11-arm, win_arm64, ""]
+          #- [macos-13, macosx_x86_64, accelerate]
+          #- [macos-14, macosx_arm64, accelerate]  # always use accelerate
+          #- [windows-2019, win_amd64, ""]
+          #- [windows-2019, win32, ""]
+          #- [windows-11-arm, win_arm64, ""]
         python: ["cp311", "cp312", "cp313", "cp313t", "pp311"]
         exclude:
           # Don't build PyPy 32-bit windows
-          - buildplat: [windows-2019, win32, ""]
-            python: "pp311"
+          #- buildplat: [windows-2019, win32, ""]
+          #  python: "pp311"
           # Don't build PyPy arm64 windows
-          - buildplat: [windows-11-arm, win_arm64, ""]
-            python: "pp311"
+          #- buildplat: [windows-11-arm, win_arm64, ""]
+          #  python: "pp311"
           # No PyPy on musllinux images
-          - buildplat: [ ubuntu-22.04, musllinux_x86_64, "" ]
-            python: "pp311"
-          - buildplat: [ ubuntu-22.04-arm, musllinux_aarch64, "" ]
-            python: "pp311"
-          - buildplat: [ macos13, macosx_x86_64, openblas ]
-            python: "cp313t"
+          #- buildplat: [ ubuntu-22.04, musllinux_x86_64, "" ]
+          #  python: "pp311"
+          #- buildplat: [ ubuntu-22.04-arm, musllinux_aarch64, "" ]
+          #  python: "pp311"
+          #- buildplat: [ macos13, macosx_x86_64, openblas ]
+          #  python: "cp313t"
 
     env:
       IS_32_BIT: ${{ matrix.buildplat[1] == 'win32' }}
