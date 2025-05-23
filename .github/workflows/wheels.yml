@@ -209,11 +209,9 @@ jobs:
           python3 -m pip install cibuildwheel==2.23.3
           
           # Build scipy-openblas32 from source
-          git clone https://github.com/scipy/scipy-openblas.git
-          cd scipy-openblas
-          git checkout v0.3.29.0.0  # or main if version not tagged
-          pip wheel . --wheel-dir /tmp/wheels
-          pip install /tmp/wheels/scipy_openblas32-0.3.29.0.0-*.whl
+          git clone https://github.com/MacPython/openblas-libs.git
+          cd openblas-libs
+          python3 -m pip install build
           cd ..
 
           python3 -m cibuildwheel --platform auto
