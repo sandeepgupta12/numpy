@@ -214,7 +214,7 @@ jobs:
           python3 -m pip install build
           cd ..
 
-          python3 -m cibuildwheel --platform auto
+          # python3 -m cibuildwheel --platform auto
           
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
