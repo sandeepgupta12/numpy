@@ -75,7 +75,8 @@ jobs:
         # Github Actions doesn't support pairing matrix values together, let's improvise
         # https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
-          - [ubuntu-24.04-ppc64le, manylinux_ppc64le, ""]    
+          - [ubuntu-24.04-ppc64le, manylinux_ppc64le, ""]  
+          - [ubuntu-24.04-ppc64le, musllinux_ppc64le, ""]     
           - [ubuntu-22.04, manylinux_x86_64, ""]
           - [ubuntu-22.04, musllinux_x86_64, ""]
           - [ubuntu-22.04-arm, manylinux_aarch64, ""]
@@ -109,7 +110,7 @@ jobs:
           - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
             python: "pp311"
           - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
-            python: "pp314"
+            python: "cp314"
           - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
             python: "cp314t"
 
