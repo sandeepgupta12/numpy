@@ -171,7 +171,7 @@ jobs:
           fi
 
       - name: Build wheels
-        if: 'matrix.buildplat[0] == /ppc64le/'
+        if: matrix.buildplat[0] != 'ubuntu-24.04-ppc64le'
         uses: pypa/cibuildwheel@faf86a6ed7efa889faf6996aa23820831055001a  # v2.23.3
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
@@ -180,7 +180,7 @@ jobs:
 
       - name: Build wheels for ppc64le
         #uses: pypa/cibuildwheel@ee63bf16da6cddfb925f542f2c7b59ad50e93969  # v2.22.0
-        if: 'matrix.buildplat[0] == /ppc64le/'
+        if: matrix.buildplat[0] == 'ubuntu-24.04-ppc64le'
         env:
           CIBW_ENABLE: "cpython-prerelease cpython-freethreading"
           CIBW_ARCHS: "ppc64le"
