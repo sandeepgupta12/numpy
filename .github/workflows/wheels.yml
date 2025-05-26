@@ -197,14 +197,8 @@ jobs:
           python3 -m venv venv
           source venv/bin/activate
           python3 -m pip install cibuildwheel==2.23.3
-          
-          # Build scipy-openblas32 from source
-          git clone https://github.com/MacPython/openblas-libs.git
-          cd openblas-libs
-          python3 -m build
-          cd ..
 
-          # python3 -m cibuildwheel --platform auto
+           python3 -m cibuildwheel --platform auto
           
       - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
         with:
