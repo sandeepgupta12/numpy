@@ -176,17 +176,7 @@ jobs:
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
 
-      - name: Check Docker logs for more details
-        run: |
-          sudo journalctl -xeu docker.service
-        shell: bash
-
-     
-
-      - name: Ensure Docker is running
-        run: |
-  
-          sudo systemctl status docker
+      
 
       - name: Build wheels for ppc64le
         #uses: pypa/cibuildwheel@ee63bf16da6cddfb925f542f2c7b59ad50e93969  # v2.22.0
@@ -211,7 +201,7 @@ jobs:
           # Build scipy-openblas32 from source
           git clone https://github.com/MacPython/openblas-libs.git
           cd openblas-libs
-          python3 -m pip install build
+          python3 -m build
           cd ..
 
           # python3 -m cibuildwheel --platform auto
