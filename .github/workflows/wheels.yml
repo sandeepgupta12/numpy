@@ -105,6 +105,9 @@ jobs:
             python: "cp313t"
           - buildplat: [ macos13, macosx_x86_64, openblas ]
             python: "cp314t"
+          # Don't build PyPy ppc64le
+          - buildplat: [ubuntu-24.04-ppc64le, manylinux_ppc64le, ""]
+            python: ["pp311","cp314t", "cp314"]
 
     env:
       IS_32_BIT: ${{ matrix.buildplat[1] == 'win32' }}
