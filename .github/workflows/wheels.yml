@@ -76,7 +76,7 @@ jobs:
         # https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
           - [ubuntu-24.04-ppc64le, manylinux_ppc64le, ""]  
-          - [ubuntu-24.04-ppc64le, musllinux_ppc64le, ""]     
+              
           - [ubuntu-22.04, manylinux_x86_64, ""]
           - [ubuntu-22.04, musllinux_x86_64, ""]
           - [ubuntu-22.04-arm, manylinux_aarch64, ""]
@@ -106,13 +106,10 @@ jobs:
             python: "cp313t"
           - buildplat: [ macos13, macosx_x86_64, openblas ]
             python: "cp314t"
-          # Don't build PyPy ppc64le
+          # Don't build ppc64le
           - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
-            python: "pp311"
-          - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
-            python: "cp314"
-          - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
-            python: "cp314t"
+            python: ["pp311","cp314","cp314t"]
+          
 
     env:
       IS_32_BIT: ${{ matrix.buildplat[1] == 'win32' }}
