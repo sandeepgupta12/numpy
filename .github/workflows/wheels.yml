@@ -75,7 +75,7 @@ jobs:
         # Github Actions doesn't support pairing matrix values together, let's improvise
         # https://github.com/github/feedback/discussions/7835#discussioncomment-1769026
         buildplat:
-          - [ubuntu-24.04-ppc64le-p10, manylinux_ppc64le, ""]  
+          - [ubuntu-24.04-ppc64le, manylinux_ppc64le, ""]  
               
           - [ubuntu-22.04, manylinux_x86_64, ""]
           - [ubuntu-22.04, musllinux_x86_64, ""]
@@ -107,11 +107,11 @@ jobs:
           - buildplat: [ macos13, macosx_x86_64, openblas ]
             python: "cp314t"
           # Don't build PyPy ppc64le
-          - buildplat: [ ubuntu-24.04-ppc64le-p10, manylinux_ppc64le, "" ]
+          - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
             python: "pp311"
-          - buildplat: [ ubuntu-24.04-ppc64le-p10, manylinux_ppc64le, "" ]
+          - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
             python: "cp314"
-          - buildplat: [ ubuntu-24.04-ppc64le-p10, manylinux_ppc64le, "" ]
+          - buildplat: [ ubuntu-24.04-ppc64le, manylinux_ppc64le, "" ]
             python: "cp314t"
 
     env:
@@ -151,7 +151,7 @@ jobs:
 
       # Used to push the built wheels
       - uses: actions/setup-python@a26af69be951a213d495a4c3e4e4022e16d87065 # v5.6.0
-        if: matrix.buildplat[0] != 'ubuntu-24.04-ppc64le-p10'
+        if: matrix.buildplat[0] != 'ubuntu-24.04-ppc64le'
         with:
           python-version: "3.x"
 
@@ -182,7 +182,7 @@ jobs:
           fi
 
       - name: Build wheels
-        if: matrix.buildplat[0] != 'ubuntu-24.04-ppc64le-p10'
+        if: matrix.buildplat[0] != 'ubuntu-24.04-ppc64le'
         uses: pypa/cibuildwheel@faf86a6ed7efa889faf6996aa23820831055001a  # v2.23.3
         env:
           CIBW_BUILD: ${{ matrix.python }}-${{ matrix.buildplat[1] }}
@@ -190,7 +190,7 @@ jobs:
       
 
       - name: Build wheels for ppc64le
-        if: matrix.buildplat[0] == 'ubuntu-24.04-ppc64le-p10'
+        if: matrix.buildplat[0] == 'ubuntu-24.04-ppc64le'
         env:
           CIBW_ENABLE: "cpython-prerelease cpython-freethreading"
           CIBW_ARCHS: "ppc64le"
