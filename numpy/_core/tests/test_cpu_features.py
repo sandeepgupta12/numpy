@@ -106,13 +106,14 @@ class AbstractTest:
     def load_flags_auxv(self):
         auxv = subprocess.check_output(['/bin/true'], env={"LD_SHOW_AUXV": "1"})
         for at in auxv.split(b'\n'):
-            if not at.startswith(b"AT_HWCAP"):
+            if not at.startswith(b"AT_HWCAP" or at.startswith(b"AT_HWCAP2")):
                 continue
             hwcap_value = [s.strip() for s in at.split(b':', 1)]
             if len(hwcap_value) == 2:
                 self.features_flags = self.features_flags.union(
                     hwcap_value[1].upper().decode().split()
                 )
+        
 
 @pytest.mark.skipif(
     sys.platform == 'emscripten',
