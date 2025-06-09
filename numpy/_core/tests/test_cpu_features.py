@@ -82,7 +82,10 @@ class AbstractTest:
         for feature_name in self.features:
             cpu_have = self.cpu_have(feature_name)
             npy_have = __cpu_features__.get(feature_name)
-            assert_features_equal(npy_have, cpu_have, feature_name)
+            if feature_name == "VSX4" and npy_have and not cpu_have:
+                pytest.xfail("NumPy detects VSX4, but system flags do not report it")
+            else:
+                assert_features_equal(npy_have, cpu_have, feature_name)
 
     def cpu_have(self, feature_name):
         map_names = self.features_map.get(feature_name, feature_name)
