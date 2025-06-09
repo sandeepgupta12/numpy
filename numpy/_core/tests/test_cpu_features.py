@@ -74,6 +74,7 @@ class AbstractTest:
 
     def test_features(self):
         self.load_flags()
+        print("Detected HWCAP flags:", self.features_flags)
         for gname, features in self.features_groups.items():
             test_features = [self.cpu_have(f) for f in features]
             assert_features_equal(__cpu_features__.get(gname), all(test_features), gname)
