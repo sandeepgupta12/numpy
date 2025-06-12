@@ -61,7 +61,8 @@ jobs:
         spin --version
 
     - name: Meson Build
-      
+      env:
+        HOME: /tmp
       run: |
         git config --global --add safe.directory "$PWD"
         spin build --clean -- ${MESON_OPTIONS}
