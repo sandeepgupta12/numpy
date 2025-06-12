@@ -48,6 +48,8 @@ jobs:
         pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout
 
     - name: Meson Build
+      env:
+        HOME: /tmp
       run: |
         git config --global --add safe.directory "$PWD"
         spin build --clean -- ${MESON_OPTIONS}
