@@ -46,17 +46,14 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements/build_requirements.txt
         pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout
+        pip install spin
 
-    - name: Install spin
-      run: |
-        python3 -m pip install -U pip setuptools wheel
-        python3 -m pip install git+https://github.com/numpy/spin
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+   
     - name: Confirm spin installation
       run: |
         which spin
         spin --version
-        
+
     - name: Meson Build
       env:
         HOME: /tmp
