@@ -32,6 +32,9 @@ jobs:
 
     name: "Native PPC64LE ${{ matrix.MESON_OPTIONS }}"
     steps:
+    - name: Ensure HOME is set
+      run: |
+        export HOME=${HOME:-/tmp}
     - uses: actions/checkout@v4
       with:
         submodules: recursive
@@ -61,8 +64,6 @@ jobs:
         spin --version
 
     - name: Meson Build
-      env:
-        HOME: /tmp
       run: |
         git config --global --add safe.directory "$PWD"
         spin build --clean -- ${MESON_OPTIONS}
