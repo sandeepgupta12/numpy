@@ -47,6 +47,11 @@ jobs:
         pip install -r requirements/build_requirements.txt
         pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout
 
+    - name: Install spin
+      run: |
+        python3 -m pip install -U pip setuptools wheel
+        python3 -m pip install .  # Installs spin from the repo if it's included
+
     - name: Meson Build
       env:
         HOME: /tmp
