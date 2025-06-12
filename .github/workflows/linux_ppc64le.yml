@@ -51,11 +51,12 @@ jobs:
       run: |
         python3 -m pip install -U pip setuptools wheel
         python3 -m pip install spin
-        echo "$HOME/.local/bin" >> $GITHUB_PATH
+        echo "/home/runner/.local/bin" >> $GITHUB_PATH
 
    
     - name: Confirm spin installation
       run: |
+        echo $PATH
         which spin
         spin --version
 
