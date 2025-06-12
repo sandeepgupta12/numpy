@@ -50,8 +50,13 @@ jobs:
     - name: Install spin
       run: |
         python3 -m pip install -U pip setuptools wheel
-        python3 -m pip install .  # Installs spin from the repo if it's included
-
+        python3 -m pip install git+https://github.com/numpy/spin
+        echo "$HOME/.local/bin" >> $GITHUB_PATH
+    - name: Confirm spin installation
+      run: |
+        which spin
+        spin --version
+        
     - name: Meson Build
       env:
         HOME: /tmp
