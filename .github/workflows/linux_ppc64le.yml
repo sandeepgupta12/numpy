@@ -61,7 +61,7 @@ jobs:
     - name: Meson Build
       run: |
         spin build --with-scipy-openblas=64
-        spin test -j auto -- --timeout=600 --durations=10
+        
         
 
     - name: Meson Log
@@ -70,4 +70,5 @@ jobs:
 
     - name: Run Tests
       run: |
-        spin test -j auto -- --timeout=600 --durations=10
+        export F90=$(which gfortran)
+        spin test -- --timeout=600 --durations=10
