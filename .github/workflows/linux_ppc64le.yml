@@ -50,10 +50,14 @@ jobs:
 
     - name: Build with Meson
       run: |
+        export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/lib64/pkgconfig"
+        export F90=$(which gfortran)
         spin build --clean --with-scipy-openblas=64
 
     - name: Run tests
       run: |
+        export F90=$(which gfortran)
+        unset PYTHONPATH
         spin test -j auto -- --timeout=600 --durations=10
 
     - name: Meson Log
