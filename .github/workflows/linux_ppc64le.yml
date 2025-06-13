@@ -38,6 +38,7 @@ jobs:
       run: |
         python3 -m pip install -U pip setuptools wheel
         python3 -m pip install spin
+        echo "/home/runner/.local/bin" >> $GITHUB_PATH
         python3 -m pip install -r requirements/ci_requirements.txt
         python3 -m pip install -r requirements/build_requirements.txt -r requirements/test_requirements.txt
 
