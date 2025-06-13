@@ -1,56 +1,44 @@
-name: Native ppc64le Linux Test
+name: Test PPC64LE Native
 
 on:
   pull_request:
     branches:
       - main
       - maintenance/**
-  workflow_dispatch:
-
-permissions:
-  contents: read
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
+permissions:
+  contents: read
+
 jobs:
   native_ppc64le:
-    
-    runs-on: ubuntu-24.04-ppc64le  # Ensure your self-hosted runner is tagged with 'ppc64le'
-    
+    name: Native PPC64LE
+    runs-on: ubuntu-24.04-ppc64le  # make sure the runner is labeled `ppc64le`
+    if: github.repository == 'numpy/numpy'
 
-    name: "Native PPC64LE"
     steps:
-    
-    - uses: actions/checkout@v4
+    - name: Checkout code
+      uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-tags: true
         persist-credentials: false
 
-    - name: Install dependencies
+    - name: Install system dependencies
       run: |
         sudo apt update
         sudo apt install -y python3 python3-pip python3-dev cmake ninja-build gfortran \
                             build-essential libopenblas-dev liblapack-dev pkg-config
-        pip install --upgrade pip
-        pip install -r requirements/build_requirements.txt
-        pip install -r requirements/ci_requirements.txt
-        pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout
 
-    - name: Install spin
+    - name: Install Python packages
       run: |
         python3 -m pip install -U pip setuptools wheel
         python3 -m pip install spin
-        echo "/home/runner/.local/bin" >> $GITHUB_PATH
-
-   
-    - name: Confirm spin installation
-      run: |
-        echo $PATH
-        which spin
-        spin --version
+        python3 -m pip install -r requirements/ci_requirements.txt
+        python3 -m pip install -r requirements/build_requirements.txt -r requirements/test_requirements.txt
 
     - name: Configure Git safe directory
       env:
@@ -58,17 +46,14 @@ jobs:
       run: |
         git config --global --add safe.directory "$PWD"
 
-    - name: Meson Build
+    - name: Build with Meson
       run: |
-        spin build --with-scipy-openblas=64
-        
-        
+        spin build --clean --with-scipy-openblas=64
+
+    - name: Run tests
+      run: |
+        spin test -j auto -- --timeout=600 --durations=10
 
     - name: Meson Log
       if: always()
       run: cat build/meson-logs/meson-log.txt
-
-    - name: Run Tests
-      run: |
-        export F90=$(which gfortran)
-        spin test -- --timeout=600 --durations=10 -k "test_kind or test_multiarray or test_simd or test_umath or test_ufunc"
