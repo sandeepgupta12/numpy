@@ -61,6 +61,7 @@ jobs:
     - name: Meson Build
       run: |
         spin build --with-scipy-openblas=64
+        spin test -j auto -- --timeout=600 --durations=10
         
 
     - name: Meson Log
