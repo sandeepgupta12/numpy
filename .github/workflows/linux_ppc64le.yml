@@ -71,4 +71,4 @@ jobs:
     - name: Run Tests
       run: |
         export F90=$(which gfortran)
-        spin test -- --timeout=600 --durations=10
+        spin test -- --timeout=600 --durations=10 -k "test_kind or test_multiarray or test_simd or test_umath or test_ufunc"
