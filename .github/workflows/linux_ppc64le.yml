@@ -18,19 +18,9 @@ jobs:
   native_ppc64le:
     
     runs-on: ubuntu-24.04-ppc64le  # Ensure your self-hosted runner is tagged with 'ppc64le'
-    strategy:
-      fail-fast: false
-      matrix:
-        MESON_OPTIONS:
-          - "-Dallow-noblas=true"
-          - "-Dallow-noblas=true -Dcpu-baseline=vsx3"
-        TEST_FILTER:
-          - "test_kind or test_multiarray or test_simd or test_umath or test_ufunc"
+    
 
-    env:
-      TERM: xterm-256color
-
-    name: "Native PPC64LE ${{ matrix.MESON_OPTIONS }}"
+    name: "Native PPC64LE"
     steps:
     
     - uses: actions/checkout@v4
@@ -69,7 +59,8 @@ jobs:
 
     - name: Meson Build
       run: |
-        spin build --clean -- ${MESON_OPTIONS}
+        spin build --with-scipy-openblas=64
+        
 
     - name: Meson Log
       if: always()
@@ -77,5 +68,4 @@ jobs:
 
     - name: Run Tests
       run: |
-        export F90=$(which gfortran)
-        spin test -- --timeout=600 --durations=10 -k "${{ matrix.TEST_FILTER }}"
+        spin test -j auto -- --timeout=600 --durations=10
