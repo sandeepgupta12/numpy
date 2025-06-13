@@ -36,6 +36,7 @@ jobs:
                             build-essential libopenblas-dev liblapack-dev pkg-config
         pip install --upgrade pip
         pip install -r requirements/build_requirements.txt
+        pip install -r requirements/ci_requirements.txt
         pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout
 
     - name: Install spin
