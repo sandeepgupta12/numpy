@@ -54,10 +54,18 @@ jobs:
         export F90=$(which gfortran)
         spin build --clean --with-scipy-openblas=64
 
+    - name: Check NumPy .so linkage
+      run: |
+        find build-install -name "*.so" | xargs file
+        find build-install -name "*.so" | xargs ldd || true
+
+    - name: Check OpenBLAS
+      run: |
+        strings build-install/usr/lib/python3/dist-packages/numpy/.libs/libopenblas*.so | grep -i openblas
     - name: Run tests
       run: |
         export F90=$(which gfortran)
-        unset PYTHONPATH
+        python3 -m pip install --force-reinstall build-install/usr/lib/python3/dist-packages/numpy
         spin test -j auto -- --timeout=600 --durations=10
 
     - name: Meson Log
