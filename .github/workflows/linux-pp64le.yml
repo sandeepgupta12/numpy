@@ -22,16 +22,10 @@ jobs:
     # To enable this workflow on a fork, comment out:
     
     runs-on: ubuntu-24.04-ppc64le
-    strategy:
-      fail-fast: false
-      matrix:
-        MESON_OPTIONS:
-          - "-Dallow-noblas=true"
-          - "-Dallow-noblas=true -Dcpu-baseline=vsx3"
-        TEST_FILTER:
-          - "test_kind or test_multiarray or test_simd or test_umath or test_ufunc"
+    
+        
 
-    name: "Native PPC64LE ${{ matrix.MESON_OPTIONS }}"
+    name: "Native PPC64LE"
     steps:
     
     - uses: actions/checkout@v4
@@ -63,7 +57,7 @@ jobs:
 
     - name: Meson Build
       run: |
-        spin build --clean -- ${MESON_OPTIONS}
+        spin build --clean --Dallow-noblas=true
 
     - name: Meson Log
       if: always()
@@ -72,4 +66,4 @@ jobs:
     - name: Run Tests
       run: |
         export F90=$(which gfortran)
-        spin test -- --timeout=600 --durations=10 -k "${{ matrix.TEST_FILTER }}"
+        spin test -- --timeout=600 --durations=10
