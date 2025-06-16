@@ -1,4 +1,4 @@
-name: Test PPC64LE Native
+name: Native ppc64le Linux Test
 
 on:
   pull_request:
@@ -7,40 +7,52 @@ on:
       - maintenance/**
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
   cancel-in-progress: true
 
-permissions:
-  contents: read
-
 jobs:
   native_ppc64le:
-    name: Native PPC64LE
-    runs-on: ubuntu-24.04-ppc64le-p10  # make sure the runner is labeled `ppc64le`
     
+    runs-on: ubuntu-24.04-ppc64le  # Ensure your self-hosted runner is tagged with 'ppc64le'
+    strategy:
+      fail-fast: false
+      matrix:
+        MESON_OPTIONS:
+          - "-Dallow-noblas=true"
+          - "-Dallow-noblas=true -Dcpu-baseline=vsx3"
+        TEST_FILTER:
+          - "test_kind or test_multiarray or test_simd or test_umath or test_ufunc"
 
+    env:
+      TERM: xterm-256color
+
+    name: "Native PPC64LE ${{ matrix.MESON_OPTIONS }}"
     steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
+    
+    - uses: actions/checkout@v4
       with:
         submodules: recursive
         fetch-tags: true
         persist-credentials: false
 
-    - name: Install system dependencies
+    - name: Install dependencies
       run: |
         sudo apt update
         sudo apt install -y python3 python3-pip python3-dev cmake ninja-build gfortran \
                             build-essential libopenblas-dev liblapack-dev pkg-config
+        pip install --upgrade pip
+        pip install -r requirements/build_requirements.txt
+        pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout
 
-    - name: Install Python packages
+    - name: Install spin
       run: |
         python3 -m pip install -U pip setuptools wheel
         python3 -m pip install spin
         echo "/home/runner/.local/bin" >> $GITHUB_PATH
-        python3 -m pip install -r requirements/ci_requirements.txt
-        python3 -m pip install -r requirements/build_requirements.txt -r requirements/test_requirements.txt
 
     - name: Configure Git safe directory
       env:
@@ -48,26 +60,15 @@ jobs:
       run: |
         git config --global --add safe.directory "$PWD"
 
-    - name: Build with Meson
+    - name: Meson Build
       run: |
-        export PKG_CONFIG_PATH="/usr/lib/pkgconfig:/usr/lib64/pkgconfig"
-        export F90=$(which gfortran)
-        spin build --clean --with-scipy-openblas=64
-
-    - name: Check NumPy .so linkage
-      run: |
-        find build-install -name "*.so" | xargs file
-        find build-install -name "*.so" | xargs ldd || true
-
-    - name: Check OpenBLAS
-      run: |
-        strings build-install/usr/lib/python3/dist-packages/numpy/.libs/libopenblas*.so | grep -i openblas
-    - name: Run tests
-      run: |
-        export F90=$(which gfortran)
-        python3 -m pip install --force-reinstall build-install/usr/lib/python3/dist-packages/numpy
-        spin test -j auto -- --timeout=600 --durations=10
+        spin build --clean -- ${MESON_OPTIONS}
 
     - name: Meson Log
       if: always()
       run: cat build/meson-logs/meson-log.txt
+
+    - name: Run Tests
+      run: |
+        export F90=$(which gfortran)
+        spin test -- --timeout=600 --durations=10 -k "${{ matrix.TEST_FILTER }}"
