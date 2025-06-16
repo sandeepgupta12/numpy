@@ -5,9 +5,6 @@ on:
     branches:
       - main
       - maintenance/**
-  push:
-    branches:
-      - test1
   workflow_dispatch:
 
 permissions:
@@ -20,11 +17,9 @@ concurrency:
 jobs:
   native_ppc64le:
     # To enable this workflow on a fork, comment out:
-    
+    if: github.repository == 'numpy/numpy'
     runs-on: ubuntu-24.04-ppc64le
     
-        
-
     name: "Native PPC64LE"
     steps:
     
@@ -66,4 +61,4 @@ jobs:
     - name: Run Tests
       run: |
         export F90=$(which gfortran)
-        spin test -- --timeout=600 --durations=10 -k "test_kind or test_multiarray or test_simd or test_umath or test_ufunc"
+        spin test -- --timeout=600 --durations=10
