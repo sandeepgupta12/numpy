@@ -6,6 +6,9 @@ on:
       - main
       - maintenance/**
       - test1
+  push:
+    branches:
+      - test1
   workflow_dispatch:
 
 permissions:
