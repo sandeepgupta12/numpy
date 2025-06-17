@@ -1,0 +1,16 @@
+name: Runner Infinite Test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  loop:
+    runs-on: ubuntu-24.04-ppc64le  # or your self-hosted label
+    steps:
+      - name: Print message infinitely
+        run: |
+          echo "Starting infinite runner test loop..."
+          while true; do
+            echo "Runner is active - $(date)"
+            sleep 60
+          done
