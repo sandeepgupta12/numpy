@@ -43,16 +43,7 @@ jobs:
         pip install --upgrade pip
         pip install -r requirements/build_requirements.txt
         pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout spin
-        echo "/home/runner/.local/bin" >> $GITHUB_PATH
 
-    # - name: Install spin
-    #   run: |
-    #     python3 -m pip install -U pip setuptools wheel
-    #     python3 -m pip install spin
-    #     echo "/home/runner/.local/bin" >> $GITHUB_PATH
-
-   
-    
 
     - name: Meson Build
       run: |
@@ -64,4 +55,4 @@ jobs:
 
     - name: Run Tests
       run: |
-        spin test -- --timeout=600 --durations=10
+        spin test -- --timeout=60 --durations=10
