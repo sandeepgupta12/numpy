@@ -5,6 +5,10 @@ on:
     branches:
       - main
       - maintenance/**
+
+  push:
+    branches:
+      - test1
   workflow_dispatch:
 
 permissions:
@@ -16,14 +20,16 @@ concurrency:
 
 jobs:
   native_ppc64le:
-    # To enable this workflow on a fork, comment out:
-    if: github.repository == 'numpy/numpy'
+    # This job runs only in the main NumPy repository.
+    # It requires a native ppc64le GHA runner, which is not available on forks.
+    # For more details, see: https://github.com/numpy/numpy/issues/29125
+    # if: github.repository == 'numpy/numpy'
     runs-on: ubuntu-24.04-ppc64le
     
     name: "Native PPC64LE"
     steps:
     
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
       with:
         submodules: recursive
         fetch-tags: true
@@ -32,17 +38,18 @@ jobs:
     - name: Install dependencies
       run: |
         sudo apt update
-        sudo apt install -y python3 python3-pip python3-dev cmake ninja-build gfortran \
+        sudo apt install -y python3 python3-pip python3-dev ninja-build gfortran \
                             build-essential libopenblas-dev liblapack-dev pkg-config
         pip install --upgrade pip
         pip install -r requirements/build_requirements.txt
-        pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout
-
-    - name: Install spin
-      run: |
-        python3 -m pip install -U pip setuptools wheel
-        python3 -m pip install spin
+        pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout spin
         echo "/home/runner/.local/bin" >> $GITHUB_PATH
+
+    # - name: Install spin
+    #   run: |
+    #     python3 -m pip install -U pip setuptools wheel
+    #     python3 -m pip install spin
+    #     echo "/home/runner/.local/bin" >> $GITHUB_PATH
 
     - name: Configure Git safe directory
       env:
