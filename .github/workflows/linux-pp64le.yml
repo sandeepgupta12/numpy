@@ -48,7 +48,7 @@ jobs:
 
     - name: Meson Build
       run: |
-        spin build --clean
+        spin build --clean -- -Dallow-noblas=false
 
     - name: Meson Log
       if: always()
