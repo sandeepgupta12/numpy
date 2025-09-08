@@ -19,7 +19,7 @@ jobs:
     # It requires a native ppc64le GHA runner, which is not available on forks.
     # For more details, see: https://github.com/numpy/numpy/issues/29125
     
-    runs-on: ubuntu-24.04-ppc64le
+    runs-on: ubuntu-24.04-ppc64le-p10
     name: "Native PPC64LE"
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
