@@ -70,5 +70,5 @@ jobs:
 
     - name: Run Tests
       run: |
-        export F90=$(which gfortran)
-        spin test -- --timeout=600 --durations=10 -k "${{ matrix.TEST_FILTER }}"
+        
+        spin test -- --timeout=600 --durations=10
