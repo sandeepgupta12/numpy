@@ -3,9 +3,7 @@ name: Native ppc64le Linux Test
 on:
   push:
     branches:
-      - *.*
-
-
+      - "**"
   workflow_dispatch:
 
 permissions:
