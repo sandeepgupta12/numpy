@@ -70,5 +70,4 @@ jobs:
 
     - name: Run Tests
       run: |
-        
         spin test -- --timeout=600 --durations=10
