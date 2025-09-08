@@ -40,7 +40,7 @@ jobs:
 
     - name: Meson Build
       run: |
-        spin build -- -Dallow-noblas=false
+        spin build
 
     - name: Meson Log
       if: always()
