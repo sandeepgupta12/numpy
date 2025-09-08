@@ -18,7 +18,7 @@ jobs:
     # This job runs only in the main NumPy repository.
     # It requires a native ppc64le GHA runner, which is not available on forks.
     # For more details, see: https://github.com/numpy/numpy/issues/29125
-    if: github.repository == 'numpy/numpy'
+    
     runs-on: ubuntu-24.04-ppc64le
     name: "Native PPC64LE"
     steps:
