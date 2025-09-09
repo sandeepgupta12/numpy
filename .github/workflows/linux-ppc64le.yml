@@ -19,7 +19,7 @@ jobs:
     # It requires a native ppc64le GHA runner, which is not available on forks.
     # For more details, see: https://github.com/numpy/numpy/issues/29125
     
-    runs-on: ubuntu-24.04-ppc64le-p10
+    runs-on: ubuntu-24.04-ppc64le
     name: "Native PPC64LE"
     steps:
     - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
@@ -47,5 +47,7 @@ jobs:
       run: cat build/meson-logs/meson-log.txt
 
     - name: Run Tests
+      env:
+        NPY_ENABLE_CPU_FEATURES: "VSX3,VSX4"
       run: |
         spin test -- --timeout=60 --durations=10
