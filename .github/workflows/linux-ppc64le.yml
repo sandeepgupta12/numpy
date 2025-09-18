@@ -41,7 +41,7 @@ jobs:
     
     - name: Dump SIMD macros1
       run: |
-        echo "#include <numpy/_core/src/common/simd/simd.h>" > check.c
+        echo '#include "numpy/_core/src/common/simd/simd.h"' > check.c
         gcc -mcpu=power10 \
         -I/usr/include/python3.12 \
         -Inumpy/_core/include \
