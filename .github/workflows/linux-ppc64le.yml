@@ -41,7 +41,11 @@ jobs:
     - name: Dump SIMD macros
       run: |
         echo "#include <numpy/_core/src/common/simd/simd.h>" > check.c
-        gcc -mcpu=power10 -I. -I/usr/include/python3.12 -dM -E check.c | grep NPY_HAVE
+        gcc -mcpu=power10 \
+        -I. \
+        -I/usr/include/python3.12 \
+        -I$(python3 -c "import numpy; print(numpy.get_include())") \
+        -dM -E check.c | grep NPY_HAVE
 
 
     - name: Meson Build
