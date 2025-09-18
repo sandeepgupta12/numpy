@@ -44,8 +44,7 @@ jobs:
     - name: Meson Build
       run: |
         spin build
-    - name: Install built NumPy
-      run: pip install build/*.whl
+  
 
     - name: Dump SIMD macros
       run: |
