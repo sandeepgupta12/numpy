@@ -38,9 +38,15 @@ jobs:
         pip install pytest pytest-xdist hypothesis typing_extensions pytest-timeout spin
         echo "/home/runner/.local/bin" >> $GITHUB_PATH
 
+    - name: Dump SIMD macros
+      run: |
+        echo "#include <numpy/_core/src/common/simd/simd.h>" > check.c
+        gcc -march=power10 -I. -I/usr/include/python3.12 -dM -E check.c | grep NPY_HAVE
+
+
     - name: Meson Build
       run: |
-        spin build -v -- -Dc_args="-dM -E -P"
+        spin build
 
     - name: Meson Log
       if: always()
