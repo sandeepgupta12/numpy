@@ -1327,8 +1327,11 @@ NPY_NO_EXPORT void
             *((@type@ *) op1) = 0;
         }
         else {
-            /* Use plain C % operator for integers, fmod for floats */
+#if @kind@ == 'i' || @kind@ == 'u'  /* integers */
             *((@type@ *) op1) = in1 % in2;
+#else  /* floats */
+            *((@type@ *) op1) = fmod(in1, in2);
+#endif
         }
 #else
         /* Normal path */
