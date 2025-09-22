@@ -1318,7 +1318,22 @@ NPY_NO_EXPORT void
     BINARY_LOOP {
         const @type@ in1 = *(@type@ *)ip1;
         const @type@ in2 = *(@type@ *)ip2;
+#*((@type@ *) op1) = npy_remainder@c@(in1, in2);
+        #if defined(__PPC64__) || defined(__PPC64LE__) || defined(__PPC__)
+        /* Workaround: force scalar remainder on POWER to avoid SIMD bug */
+        if (in2 == 0) {
+            /* follow Python/NumPy div-by-zero convention */
+            npy_set_floatstatus_divbyzero();
+            *((@type@ *) op1) = 0;
+        }
+        else {
+            /* Use plain C % operator for integers, fmod for floats */
+            *((@type@ *) op1) = in1 % in2;
+        }
+#else
+        /* Normal path */
         *((@type@ *) op1) = npy_remainder@c@(in1, in2);
+#endif
     }
 }
 
