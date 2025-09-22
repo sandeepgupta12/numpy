@@ -1319,24 +1319,27 @@ NPY_NO_EXPORT void
         const @type@ in1 = *(@type@ *)ip1;
         const @type@ in2 = *(@type@ *)ip2;
 #*((@type@ *) op1) = npy_remainder@c@(in1, in2);
-        #if defined(__PPC64__) || defined(__PPC64LE__) || defined(__PPC__)
-        /* Workaround: force scalar remainder on POWER to avoid SIMD bug */
+         @type@ out;
+
+        // handle divide-by-zero explicitly
         if (in2 == 0) {
-            /* follow Python/NumPy div-by-zero convention */
-            npy_set_floatstatus_divbyzero();
-            *((@type@ *) op1) = 0;
+            // NumPy convention: return 0 (but usually an error is signaled elsewhere)
+            out = 0;
+        }
+        // handle overflow case: MIN_INT % -1
+        else if (in1 == NPY_MIN_@C_TYPE@ && in2 == -1) {
+            out = 0;
         }
         else {
-#if @kind@ == 'i' || @kind@ == 'u'  /* integers */
-            *((@type@ *) op1) = in1 % in2;
-#else  /* floats */
-            *((@type@ *) op1) = fmod(in1, in2);
-#endif
+            out = npy_remainder@c@(in1, in2);
+
+            // Python semantics: result should have same sign as divisor
+            if (out != 0 && ((out ^ in2) < 0)) {
+                out += in2;
+            }
         }
-#else
-        /* Normal path */
-        *((@type@ *) op1) = npy_remainder@c@(in1, in2);
-#endif
+
+        *((@type@ *)op1) = out;
     }
 }
 
