@@ -523,6 +523,7 @@ npy_remainder@c@(@type@ a, @type@ b)
 {
     @type@ mod;
     
+    fprintf(stderr, "[DEBUG][npy_remainder] inputs: a=%lld, b=%lld\n", (long long)a, (long long)b);
     if (NPY_UNLIKELY(!b) || 
         NPY_UNLIKELY(IS_ARM64_CLANG && sizeof(@type@) == sizeof(long double) && (npy_isnan(a) || npy_isnan(b)))) {
         /*
@@ -536,9 +537,10 @@ npy_remainder@c@(@type@ a, @type@ b)
          *    removed once fixed:
          *    https://github.com/llvm/llvm-project/issues/59924
          */
+        fprintf(stderr, "[DEBUG][npy_remainder] handled special-case path (b=%lld)\n", (long long)b);
         return npy_fmod@c@(a, b);
     }
-    
+    fprintf(stderr, "[DEBUG][npy_remainder] result mod=%lld\n", (long long)mod);
     npy_divmod@c@(a, b, &mod);
     return mod;
 }
