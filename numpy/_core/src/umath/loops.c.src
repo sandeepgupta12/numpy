@@ -1318,34 +1318,8 @@ NPY_NO_EXPORT void
     BINARY_LOOP {
         const @type@ in1 = *(@type@ *)ip1;
         const @type@ in2 = *(@type@ *)ip2;
-#*((@type@ *) op1) = npy_remainder@c@(in1, in2);
-        @type@ out;
-
-        /*
-         * If divisor == 0: signal divide-by-zero and set result to 0.
-         * If signed overflow case (MIN % -1): produce 0 as remainder
-         * (C may produce the MIN value in this edge case on some ABIs).
-         *
-         * Compute the MIN value in a portable way using an unsigned shift.
-         */
-        if (in2 == 0) {
-            /* signal floating status like other remainder code paths */
-            npy_set_floatstatus_divbyzero();
-            out = (@type@)0;
-        }
-        else {
-            /* compute MIN for signed types, but this will not match for unsigned */
-            const @type@ minval = (@type@)(1ULL << (8 * sizeof(@type@) - 1));
-            if (in2 == (@type@)-1 && in1 == minval) {
-                /* mathematically MIN % -1 == 0; C implementation on some CPUs yields MIN */
-                out = (@type@)0;
-            }
-            else {
-                out = npy_remainder@c@(in1, in2);
-            }
-        }
-
-        *((@type@ *) op1) = out;
+        *((@type@ *) op1) = npy_remainder@c@(in1, in2);
+        
     }
 }
 
