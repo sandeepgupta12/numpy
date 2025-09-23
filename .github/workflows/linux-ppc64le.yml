@@ -44,16 +44,6 @@ jobs:
     - name: Meson Build
       run: |
         spin build
-  
-    - name: Dump SIMD macros
-      run: |
-        echo '#include "numpy/_core/src/common/simd/simd.h"' > check.c
-        gcc -mcpu=power10 \
-        -I/usr/include/python3.12 \
-        -Inumpy/_core/include \
-        -Inumpy/_core/src/common \
-        -Ibuild/src/_core/include \
-        -dM -E check.c | grep NPY_HAVE
     
 
     - name: Meson Log
