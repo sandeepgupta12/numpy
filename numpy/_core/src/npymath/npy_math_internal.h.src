@@ -541,6 +541,7 @@ npy_remainder@c@(@type@ a, @type@ b)
         return npy_fmod@c@(a, b);
     }
     fprintf(stderr, "[DEBUG][npy_remainder] result \n");
+    fflush(stderr);
     npy_divmod@c@(a, b, &mod);
     return mod;
 }
@@ -579,7 +580,7 @@ npy_divmod@c@(@type@ a, @type@ b, @type@ *modulus)
 {
     @type@ div, mod, floordiv;
     fprintf(stderr, "[DEBUG][npy_divmod] \n");
-
+    fflush(stderr);
     mod = npy_fmod@c@(a, b);
     if (NPY_UNLIKELY(!b)) {
         /* b == 0 (not NaN): return result of fmod. For IEEE is nan */
