@@ -578,6 +578,7 @@ NPY_INPLACE @type@
 npy_divmod@c@(@type@ a, @type@ b, @type@ *modulus)
 {
     @type@ div, mod, floordiv;
+    fprintf(stderr, "[DEBUG][npy_divmod] a=%lld, b=%lld\n", (long long)a, (long long)b);
 
     mod = npy_fmod@c@(a, b);
     if (NPY_UNLIKELY(!b)) {
