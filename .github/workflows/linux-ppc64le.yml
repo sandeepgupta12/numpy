@@ -45,17 +45,17 @@ jobs:
     #   run: |
     #     spin build
     # Build NumPy from source (your patched version)
-    - name: Build NumPy from source
-      run: |
-        pip uninstall -y numpy || true
-        git clone https://github.com/numpy/numpy.git
-        cd numpy
-        # Apply your C changes here if not already committed
-        # e.g., patch files or copy edited npy_divmod / npy_remainder
-        pip install .  # install the patched NumPy
+    # - name: Build NumPy from source
+    #   run: |
+    #     pip uninstall -y numpy || true
+    #     git clone https://github.com/numpy/numpy.git
+    #     cd numpy
+    #     # Apply your C changes here if not already committed
+    #     # e.g., patch files or copy edited npy_divmod / npy_remainder
+    #     pip install .  # install the patched NumPy
     # Optional: Verify NumPy version and debug imports
-    - name: Check NumPy version
-      run: python3 -c "import numpy as np; print(np.__version__); print(np.show_config())"
+    # - name: Check NumPy version
+    #   run: python3 -c "import numpy as np; print(np.__version__); print(np.show_config())"
 
     # - name: Meson Log
     #   if: always()
@@ -66,17 +66,29 @@ jobs:
     #     spin test -- --timeout=60 --durations=10
 
     # Run tests with debug logs
-    - name: Run Tests with Debug Output
-      run: |
-        export PYTHONUNBUFFERED=1
-        export PYTHONFAULTHANDLER=x
-        mkdir -p test_logs
-        # Redirect stderr to capture npy_divmod / npy_remainder logs
-        spin test -- --timeout=60 --durations=10 2> test_logs/npy_debug.log || true
+    # - name: Run Tests with Debug Output
+    #   run: |
+    #     export PYTHONUNBUFFERED=1
+    #     export PYTHONFAULTHANDLER=x
+    #     mkdir -p test_logs
+    #     # Redirect stderr to capture npy_divmod / npy_remainder logs
+    #     spin test -- --timeout=60 --durations=10 2> test_logs/npy_debug.log || true
 
     # Upload debug logs for inspection
-    - name: Upload Debug Log
-      uses: actions/upload-artifact@v4
-      with:
-        name: npy_debug
-        path: test_logs/npy_debug.log
+    # - name: Upload Debug Log
+    #   uses: actions/upload-artifact@v4
+    #   with:
+    #     name: npy_debug
+    #     path: test_logs/npy_debug.log
+
+    - name: Meson Build
+      run: |
+        spin build -- -Dallow-noblas=false
+
+    - name: Meson Log
+      if: always()
+      run: cat build/meson-logs/meson-log.txt
+
+    - name: Run Tests
+      run: |
+        spin test -- --timeout=60 --durations=10
