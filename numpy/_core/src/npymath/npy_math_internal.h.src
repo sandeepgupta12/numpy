@@ -518,7 +518,6 @@ NPY_INPLACE @type@ npy_logaddexp2@c@(@type@ x, @type@ y)
  * Wrapper function for remainder edge cases
  * Internally calls npy_divmod*
  */
-NPY_INPLACE @type@
 npy_remainder@c@(@type@ a, @type@ b)
 {
     @type@ mod;
@@ -544,6 +543,33 @@ npy_remainder@c@(@type@ a, @type@ b)
     fflush(stderr);
     npy_divmod@c@(a, b, &mod);
     return mod;
+}
+
+/**begin repeat
+ * Integer types
+ * #type = npy_int, npy_long, npy_longlong#
+ * #c = ,l,ll#
+ */
+NPY_INPLACE @type@
+npy_remainder@c@(@type@ a, @type@ b)
+{
+    /* Handle INT_MIN % -1 overflow case explicitly */
+    if (NPY_UNLIKELY(b == -1 && a == NPY_MIN_@TYPE@)) {
+        return 0;
+    }
+    if (NPY_UNLIKELY(b == 0)) {
+        /* Division by zero: Python returns 0 for integer remainder */
+        return 0;
+    }
+    @type@ rem = a % b;
+    /* Python's remainder sign convention */
+    if ((a > 0) == (b > 0) || rem == 0) {
+        return rem;
+    } else {
+        return rem + b;
+    }
+}
+/**end repeat**/
 }
 
 NPY_INPLACE @type@
