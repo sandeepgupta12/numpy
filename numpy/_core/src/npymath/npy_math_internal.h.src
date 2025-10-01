@@ -317,25 +317,6 @@ NPY_INPLACE @type@ npy_@kind@@c@(@type@ x)
 #undef WORKAROUND_APPLE_TRIG_BUG
 
 /**end repeat**/
-
-/* Blocklist-able C99 functions */
-
-/**begin repeat
- * #type = npy_float,npy_longdouble#
- * #TYPE = FLOAT,LONGDOUBLE#
- * #c = f,l#
- * #C = F,L#
- */
-#undef NPY__FP_SFX
-#if NPY_SIZEOF_@TYPE@ == NPY_SIZEOF_DOUBLE
-    #define NPY__FP_SFX(X) X
-#else
-    #define NPY__FP_SFX(X) NPY_CAT(X, @c@)
-#endif
-
-/**begin repeat1
- * #kind = exp,log2,sqrt#
- * #KIND = EXP,LOG2,SQRT#
  */
 
 #ifdef @kind@@c@
