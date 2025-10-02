@@ -395,12 +395,17 @@ vsx4_simd_@func@_contig_@sfx@(char **args, npy_intp len)
             FLAG_IF_DIVIDEBYZERO(b);
             *dst1 = 0;
         } else{
-            *dst1 = a % b;
-#if @id@ == 1 /* remainder */
-            if (!((a > 0) == (b > 0) || *dst1 == 0)) {
-                *dst1 += b;
-            }
-#endif
+                /* Fix PPC64LE: INT_MIN % -1 should be 0, not INT_MIN */
+                if (b == -1 && a == NPY_MIN_INT@len@) {
+                    *dst1 = 0;
+                } else {
+                    *dst1 = a % b;
+    #if @id@ == 1 /* remainder */
+                    if (!((a > 0) == (b > 0) || *dst1 == 0)) {
+                        *dst1 += b;
+                    }
+    #endif
+                }
         }
     }
 #endif
