@@ -332,6 +332,9 @@ vsx4_simd_@func@_contig_@sfx@(char **args, npy_intp len)
         npyv_b@len@ amin = npyv_cmpeq_@sfx@(a, vmin);
         npyv_b@len@ bneg_one = npyv_cmpeq_@sfx@(b, vneg_one);
         npyv_b@len@ overflow = npyv_and_@sfx@(amin, bneg_one);
+        if (NPY_UNLIKELY(vec_any_ne(overflow, npyv_cvt_b@len@_@sfx@(npyv_zero_@sfx@())))) {
+            printf("SIMD INT_MIN %% -1 overflow detected in vsx4_simd_%s_contig_%s\\n", "@func@", "@sfx@");
+        }
         rem = npyv_select_@sfx@(overflow, npyv_zero_@sfx@(), rem);
 #else /* divmod */
         npyv_@sfx@ quo       = vsx4_div_@sfx@(a, b);
@@ -465,6 +468,9 @@ vsx4_simd_@func@_by_scalar_contig_@sfx@(char **args, npy_intp len)
         npyv_b@len@ amin = npyv_cmpeq_@sfx@(a, vmin);
         npyv_b@len@ bneg_one = npyv_cmpeq_@sfx@(vscalar, vneg_one);
         npyv_b@len@ overflow = npyv_and_@sfx@(amin, bneg_one);
+        if (NPY_UNLIKELY(vec_any_ne(overflow, npyv_cvt_b@len@_@sfx@(npyv_zero_@sfx@())))) {
+            printf("SIMD INT_MIN %% -1 overflow detected in vsx4_simd_%s_contig_%s\\n", "@func@", "@sfx@");
+        }
         rem = npyv_select_@sfx@(overflow, npyv_zero_@sfx@(), rem);
 #else /* divmod */
         npyv_@sfx@ quo       = vsx4_div_scalar_@sfx@(a, divisor);
