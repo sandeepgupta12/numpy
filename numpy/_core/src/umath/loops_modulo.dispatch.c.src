@@ -491,8 +491,7 @@ vsx4_simd_@func@_by_scalar_contig_@sfx@(char **args, npy_intp len)
     for (; len > 0; --len, ++src1, ++dst1) {
         const npyv_lanetype_@sfx@ a = *src1;
         /* Fix PPC64LE: INT_MIN % -1 should be 0, not INT_MIN */
-        if (scalar == -1 && a == NPY_MIN_INT@len@) {
-            npy_set_floatstatus_overflow();
+        if (NPY_UNLIKELY(a == NPY_MIN_INT@len@ && scalar == -1)) {
             *dst1 = 0;
         } else {
             *dst1 = a % scalar;
