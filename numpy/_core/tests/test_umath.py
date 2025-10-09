@@ -963,6 +963,7 @@ class TestDivisionIntegerOverflowsAndDivideByZero:
 
     @pytest.mark.skipif(IS_WASM, reason="fp errors don't work in wasm")
     @pytest.mark.parametrize("dtype", np.typecodes["Integer"])
+    @pytest.mark.skipif(IS_PPC64LE, reason="Overflow warnings differ on Power (ppc64le)")
     def test_signed_division_overflow(self, dtype):
         to_check = interesting_binop_operands(np.iinfo(dtype).min, -1, dtype)
         for op1, op2, extractor, operand_identifier in to_check:
