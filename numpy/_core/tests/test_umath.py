@@ -1016,7 +1016,6 @@ class TestDivisionIntegerOverflowsAndDivideByZero:
             [np.remainder, np.fmod, np.divmod, np.floor_divide,
              operator.mod, operator.floordiv])
     @np.errstate(divide='warn', over='warn')
-    @pytest.mark.skipif(IS_PPC64LE, reason="Overflow warnings differ on Power (ppc64le)")
     def test_overflows(self, dividend_dtype, divisor_dtype, operation):
         # SIMD tries to perform the operation on as many elements as possible
         # that is a multiple of the register's size. We resort to the
