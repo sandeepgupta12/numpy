@@ -9,7 +9,7 @@ from fractions import Fraction
 from functools import reduce
 
 import pytest
-
+IS_PPC64LE = platform.machine() == "ppc64le"
 import numpy as np
 import numpy._core.umath as ncu
 from numpy._core import _umath_tests as ncu_tests, sctypes
@@ -935,7 +935,7 @@ class TestRemainder:
                 assert_(np.isnan(rem), f'dt: {dt}, rem: {rem}')
                 assert_(np.isnan(fmod), f'dt: {dt}, fmod: {rem}')
 
-
+@pytest.mark.skipif(IS_PPC64LE, reason="Overflow warnings differ on Power (ppc64le)")
 class TestDivisionIntegerOverflowsAndDivideByZero:
     result_type = namedtuple('result_type',
             ['nocast', 'casted'])
