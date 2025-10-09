@@ -493,6 +493,7 @@ vsx4_simd_@func@_by_scalar_contig_@sfx@(char **args, npy_intp len)
         /* Fix PPC64LE: INT_MIN % -1 should be 0, not INT_MIN */
         if (NPY_UNLIKELY(a == NPY_MIN_INT@len@ && scalar == -1)) {
             *dst1 = 0;
+            npy_set_floatstatus_overflow();
         } else {
             *dst1 = a % scalar;
 #if @id@ == 1 /* remainder */
