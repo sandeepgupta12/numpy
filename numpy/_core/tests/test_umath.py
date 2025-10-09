@@ -935,7 +935,7 @@ class TestRemainder:
                 assert_(np.isnan(rem), f'dt: {dt}, rem: {rem}')
                 assert_(np.isnan(fmod), f'dt: {dt}, fmod: {rem}')
 
-@pytest.mark.skipif(IS_PPC64LE, reason="Overflow warnings differ on Power (ppc64le)")
+
 class TestDivisionIntegerOverflowsAndDivideByZero:
     result_type = namedtuple('result_type',
             ['nocast', 'casted'])
@@ -963,6 +963,7 @@ class TestDivisionIntegerOverflowsAndDivideByZero:
 
     @pytest.mark.skipif(IS_WASM, reason="fp errors don't work in wasm")
     @pytest.mark.parametrize("dtype", np.typecodes["Integer"])
+    @pytest.mark.skipif(IS_PPC64LE, reason="Overflow warnings differ on Power (ppc64le)")
     def test_signed_division_overflow(self, dtype):
         to_check = interesting_binop_operands(np.iinfo(dtype).min, -1, dtype)
         for op1, op2, extractor, operand_identifier in to_check:
@@ -1015,6 +1016,7 @@ class TestDivisionIntegerOverflowsAndDivideByZero:
             [np.remainder, np.fmod, np.divmod, np.floor_divide,
              operator.mod, operator.floordiv])
     @np.errstate(divide='warn', over='warn')
+    @pytest.mark.skipif(IS_PPC64LE, reason="Overflow warnings differ on Power (ppc64le)")
     def test_overflows(self, dividend_dtype, divisor_dtype, operation):
         # SIMD tries to perform the operation on as many elements as possible
         # that is a multiple of the register's size. We resort to the
